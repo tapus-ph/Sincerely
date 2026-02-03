@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=letter.html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opening your love letter! 💌</title>
+    <script>
+        // Global error handler - redirects to error page
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Error caught: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo);
+            window.location.href = 'error.html';
+            return true;
+        };
+
+        // Catch unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+            window.location.href = 'error.html';
+        });
+
+        window.location.href = "letter.html";
+    </script>
+</head>
+<body>
+    <p>Unfolding your love letter! 💌</p>
+</body>
+</html>

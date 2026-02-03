@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Letter Generator 💌</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💌</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color1: #FFE5EC;
+            --color2: #FF69B4;
+            --color3: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated gradient background */
+        .background-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--color1), var(--color2), var(--color3), var(--color1));
+            background-size: 400% 400%;
+            animation: gradientWave 15s ease infinite;
+            z-index: 0;
+        }
+
+        @keyframes gradientWave {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating background hearts */
+        .bg-heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.3;
+            animation: floatAndPop 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes floatAndPop {
+            0% {
+                transform: translateY(100vh) scale(1) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            80% {
+                opacity: 0.3;
+                transform: translateY(0) scale(1) rotate(360deg);
+            }
+            90% {
+                transform: translateY(-10vh) scale(1.5) rotate(380deg);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-15vh) scale(0) rotate(400deg);
+                opacity: 0;
+            }
+        }
+
+        /* Config Screen */
+        .config-screen {
+            background: var(--color3);
+            border: 8px solid var(--color2);
+            box-shadow: 
+                0 0 0 4px var(--color3),
+                0 0 0 8px var(--color1),
+                12px 12px 0 0 rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 1200px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 768px) {
+            .config-screen {
+                padding: 20px;
+                width: 95%;
+                border: 6px solid var(--color2);
+                box-shadow: 
+                    0 0 0 3px var(--color3),
+                    0 0 0 6px var(--color1),
+                    8px 8px 0 0 rgba(0, 0, 0, 0.2);
+                max-height: 95vh;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .config-screen {
+                padding: 12px;
+                width: 98%;
+                border: 3px solid var(--color2);
+                box-shadow: 
+                    0 0 0 2px var(--color3),
+                    0 0 0 3px var(--color1),
+                    4px 4px 0 0 rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        .config-screen h1 {
+            color: var(--color2);
+            font-size: 20px;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 0 var(--color1);
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .config-screen h1 {
+                font-size: 16px;
+                margin-bottom: 20px;
+                text-shadow: 2px 2px 0 var(--color1);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .config-screen h1 {
+                font-size: 12px;
+                margin-bottom: 12px;
+                text-shadow: 1px 1px 0 var(--color1);
+            }
+        }
+
+        /* Branding styles */
+        .branding-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .branding-header {
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .branding-header {
+                margin-bottom: 20px;
+            }
+        }
+
+        .branding-subtext {
+            font-size: 10px;
+            color: var(--color2);
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .branding-subtext {
+                font-size: 9px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .branding-subtext {
+                font-size: 7px;
+            }
+        }
+
+        .branding-subtext a {
+            color: var(--color2);
+            text-decoration: none;
+            border-bottom: 2px solid var(--color2);
+            padding-bottom: 2px;
+            transition: opacity 0.2s ease;
+        }
+
+        .branding-subtext a:hover {
+            opacity: 0.7;
+        }
+
+        .branding-subtext img {
+            height: 16px;
+            vertical-align: middle;
+            image-rendering: pixelated;
+            margin: 0 3px;
+        }
+
+        @media (max-width: 480px) {
+            .branding-subtext img {
+                height: 12px;
+            }
+        }
+
+        .footer-logo {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 4px solid var(--color2);
+        }
+
+        @media (max-width: 768px) {
+            .footer-logo {
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 3px solid var(--color2);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-logo {
+                margin-top: 20px;
+                padding-top: 15px;
+                border-top: 2px solid var(--color2);
+            }
+        }
+
+        .footer-logo img {
+            max-width: 200px;
+            height: auto;
+            image-rendering: pixelated;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .footer-logo img {
+                max-width: 160px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-logo img {
+                max-width: 120px;
+            }
+        }
+
+        .footer-copyright {
+            font-size: 8px;
+            color: var(--color2);
+            opacity: 0.6;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 480px) {
+            .footer-copyright {
+                font-size: 6px;
+                margin-top: 10px;
+            }
+        }
+
+        .config-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        @media (max-width: 968px) {
+            .config-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        .config-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 480px) {
+            .form-group {
+                margin-bottom: 12px;
+            }
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--color2);
+            font-size: 12px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 480px) {
+            .form-group label {
+                font-size: 9px;
+                margin-bottom: 6px;
+            }
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            border: 4px solid var(--color2);
+            background: var(--color3);
+            color: var(--color2);
+            box-shadow: 4px 4px 0 0 var(--color1);
+        }
+
+        @media (max-width: 480px) {
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                padding: 8px;
+                font-size: 8px;
+                border: 2px solid var(--color2);
+                box-shadow: 2px 2px 0 0 var(--color1);
+            }
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 480px) {
+            .form-group textarea {
+                min-height: 120px;
+            }
+        }
+
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .color-input-group {
+            text-align: center;
+        }
+
+        .color-input-group label {
+            font-size: 10px;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 480px) {
+            .color-input-group label {
+                font-size: 7px;
+                margin-bottom: 5px;
+            }
+        }
+
+        .color-input-group input[type="color"] {
+            width: 100%;
+            height: 60px;
+            border: 4px solid var(--color2);
+            cursor: pointer;
+            padding: 2px;
+        }
+
+        @media (max-width: 480px) {
+            .color-input-group input[type="color"] {
+                height: 35px;
+                border: 2px solid var(--color2);
+            }
+        }
+
+        .generate-btn {
+            width: 100%;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            padding: 20px;
+            border: 6px solid var(--color2);
+            background: var(--color2);
+            color: var(--color3);
+            cursor: pointer;
+            box-shadow: 6px 6px 0 0 rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            transition: all 0.2s ease;
+        }
+
+        @media (max-width: 480px) {
+            .generate-btn {
+                font-size: 9px;
+                padding: 12px;
+                border: 2px solid var(--color2);
+                box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.2);
+                margin-top: 10px;
+            }
+        }
+
+        .generate-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .generate-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .url-output {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--color1);
+            border: 4px solid var(--color2);
+            word-break: break-all;
+            font-size: 10px;
+            line-height: 1.8;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .url-output {
+                padding: 8px;
+                font-size: 7px;
+                line-height: 1.5;
+                border: 2px solid var(--color2);
+                margin-top: 10px;
+            }
+        }
+
+        .copy-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            border: 4px solid var(--color2);
+            background: var(--color3);
+            color: var(--color2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        @media (max-width: 480px) {
+            .copy-btn {
+                width: 100%;
+                padding: 8px;
+                font-size: 7px;
+                border: 2px solid var(--color2);
+                margin-top: 8px;
+            }
+        }
+
+        /* Music Player for Config Page */
+        .config-music-player {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--color1);
+            border: 4px solid var(--color2);
+            box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 480px) {
+            .config-music-player {
+                margin-top: 20px;
+                padding: 12px;
+                border: 2px solid var(--color2);
+            }
+        }
+
+        .music-player-header {
+            font-size: 12px;
+            color: var(--color2);
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            .music-player-header {
+                font-size: 9px;
+                margin-bottom: 10px;
+            }
+        }
+
+        .music-player-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .music-player-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            padding: 12px 24px;
+            border: 4px solid var(--color2);
+            background: var(--color2);
+            color: var(--color3);
+            cursor: pointer;
+            box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        @media (max-width: 480px) {
+            .music-player-btn {
+                font-size: 8px;
+                padding: 10px 20px;
+                border: 2px solid var(--color2);
+            }
+        }
+
+        .music-player-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .music-player-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .music-player-info {
+            font-size: 8px;
+            color: var(--color2);
+            opacity: 0.7;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 480px) {
+            .music-player-info {
+                font-size: 6px;
+            }
+        }
+
+        /* Preview Section */
+        .preview-section {
+            position: sticky;
+            top: 20px;
+        }
+
+        .preview-label {
+            color: var(--color2);
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .preview-label {
+                font-size: 9px;
+                margin-bottom: 8px;
+            }
+        }
+
+        .preview-container {
+            background: linear-gradient(45deg, var(--color1), var(--color2), var(--color3), var(--color1));
+            background-size: 400% 400%;
+            animation: gradientWave 15s ease infinite;
+            border: 6px solid var(--color2);
+            padding: 30px;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (max-width: 480px) {
+            .preview-container {
+                min-height: 250px;
+                padding: 12px;
+                border: 2px solid var(--color2);
+            }
+        }
+
+        /* Letter Display Screen */
+        .letter-screen {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .letter-screen.active {
+            display: block;
+        }
+
+        /* Paper Container */
+        .letter-paper {
+            background: #FFFEF0;
+            border: 8px solid var(--color2);
+            box-shadow: 
+                0 0 0 4px #FFFEF0,
+                0 0 0 8px var(--color1),
+                12px 12px 0 0 rgba(0, 0, 0, 0.2);
+            padding: 60px 40px;
+            position: relative;
+            min-height: 500px;
+        }
+
+        @media (max-width: 480px) {
+            .letter-paper {
+                padding: 30px 20px;
+                border: 4px solid var(--color2);
+                min-height: 400px;
+            }
+        }
+
+        /* Scroll Container */
+        .letter-scroll {
+            background: linear-gradient(to bottom, #F5E6D3, #E8D4B8);
+            border: 8px solid #8B4513;
+            box-shadow: 
+                0 0 0 4px #D2B48C,
+                12px 12px 0 0 rgba(0, 0, 0, 0.3);
+            padding: 60px 40px;
+            position: relative;
+            min-height: 500px;
+            border-radius: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .letter-scroll {
+                padding: 30px 20px;
+                border: 4px solid #8B4513;
+                min-height: 400px;
+            }
+        }
+
+        .letter-scroll::before,
+        .letter-scroll::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 30px;
+            left: 0;
+            background: inherit;
+            border-left: 8px solid #8B4513;
+            border-right: 8px solid #8B4513;
+        }
+
+        .letter-scroll::before {
+            top: -15px;
+            border-top: 8px solid #8B4513;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .letter-scroll::after {
+            bottom: -15px;
+            border-bottom: 8px solid #8B4513;
+            border-radius: 0 0 20px 20px;
+        }
+
+        /* Love Note Container */
+        .letter-note {
+            background: #FFE4E1;
+            border: 8px solid var(--color2);
+            box-shadow: 
+                0 0 0 4px #FFE4E1,
+                0 0 0 8px #FFC0CB,
+                12px 12px 0 0 rgba(0, 0, 0, 0.2);
+            padding: 60px 40px;
+            position: relative;
+            min-height: 500px;
+            transform: rotate(-1deg);
+        }
+
+        @media (max-width: 480px) {
+            .letter-note {
+                padding: 30px 20px;
+                border: 4px solid var(--color2);
+                min-height: 400px;
+            }
+        }
+
+        /* Envelope Container */
+        .letter-envelope {
+            background: #F0F0F0;
+            border: 8px solid #696969;
+            box-shadow: 
+                0 0 0 4px #F0F0F0,
+                0 0 0 8px #D3D3D3,
+                12px 12px 0 0 rgba(0, 0, 0, 0.2);
+            padding: 60px 40px;
+            position: relative;
+            min-height: 500px;
+        }
+
+        @media (max-width: 480px) {
+            .letter-envelope {
+                padding: 30px 20px;
+                border: 4px solid #696969;
+                min-height: 400px;
+            }
+        }
+
+        .letter-envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(135deg, transparent 30px, #D3D3D3 30px, #D3D3D3 calc(50% - 2px), #696969 calc(50% - 2px), #696969 calc(50% + 2px), #D3D3D3 calc(50% + 2px), #D3D3D3 calc(100% - 30px), transparent calc(100% - 30px));
+            border-bottom: 4px solid #696969;
+        }
+
+        .letter-message {
+            font-size: 14px;
+            line-height: 2;
+            color: #333;
+            margin-bottom: 40px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        @media (max-width: 480px) {
+            .letter-message {
+                font-size: 10px;
+                line-height: 1.8;
+                margin-bottom: 30px;
+            }
+        }
+
+        .letter-signature {
+            text-align: right;
+            font-size: 16px;
+            color: var(--color2);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 480px) {
+            .letter-signature {
+                font-size: 12px;
+                margin-top: 30px;
+            }
+        }
+
+        .letter-signature::before {
+            content: '💌 ';
+        }
+
+        /* Music Control */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--color3);
+            border: 4px solid var(--color2);
+            padding: 15px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.2);
+            font-size: 24px;
+            transition: all 0.2s ease;
+        }
+
+        @media (max-width: 480px) {
+            .music-control {
+                padding: 10px;
+                font-size: 20px;
+                border: 2px solid var(--color2);
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+        }
+
+        .music-control:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-gradient"></div>
+
+    <!-- Background Hearts -->
+    <div class="bg-heart" style="left: 10%; animation-delay: 0s;">💌</div>
+    <div class="bg-heart" style="left: 20%; animation-delay: 1s;">💕</div>
+    <div class="bg-heart" style="left: 30%; animation-delay: 2s;">💌</div>
+    <div class="bg-heart" style="left: 40%; animation-delay: 3s;">💕</div>
+    <div class="bg-heart" style="left: 50%; animation-delay: 4s;">💌</div>
+    <div class="bg-heart" style="left: 60%; animation-delay: 5s;">💕</div>
+    <div class="bg-heart" style="left: 70%; animation-delay: 6s;">💌</div>
+    <div class="bg-heart" style="left: 80%; animation-delay: 7s;">💕</div>
+
+    <!-- Config Screen -->
+    <div class="config-screen" id="configScreen">
+        <div class="branding-header">
+            <h1 style="margin-bottom: 15px;">Sincerely,</h1>
+            <div class="branding-subtext">
+                Made with love by 
+                <a href="https://tapus-ph.github.io" target="_blank">
+                    <img src="images/tapus-logo.jpeg" style="scale: 170%; padding-left: 2px; padding-bottom: 2px;" alt="TAPUS">
+                </a>
+            </div>
+        </div>
+        
+        <div class="config-container">
+            <div class="config-form">
+                <div class="form-group">
+                    <label>Your Love Letter Message:</label>
+                    <textarea id="letterMessage" placeholder="Write your heartfelt message here..." oninput="updatePreview()">My Dearest,
+
+Every moment with you feels like a beautiful dream I never want to wake from. 
+
+You make my world brighter, my heart fuller, and my life infinitely better.
+
+I love you more than words can express.
+
+Forever yours,</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Sender Name:</label>
+                    <input type="text" id="senderName" placeholder="Your Name" value="Your Secret Admirer" oninput="updatePreview()">
+                </div>
+
+                <div class="form-group">
+                    <label>Letter Container Style:</label>
+                    <select id="containerStyle" onchange="updatePreview()">
+                        <option value="paper">📄 Pixelated Paper</option>
+                        <option value="scroll">📜 Pixelated Scroll</option>
+                        <option value="note">💌 Love Note</option>
+                        <option value="envelope">✉️ Envelope Style</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Choose Your Colors:</label>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <div class="color-input-group">
+                            <label>Color 1<br>(Light)</label>
+                            <input type="color" id="color1" value="#FFE5EC" oninput="updatePreview()">
+                        </div>
+                        <div class="color-input-group">
+                            <label>Color 2<br>(Main)</label>
+                            <input type="color" id="color2" value="#FF69B4" oninput="updatePreview()">
+                        </div>
+                        <div class="color-input-group">
+                            <label>Color 3<br>(Background)</label>
+                            <input type="color" id="color3" value="#FFFFFF" oninput="updatePreview()">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="generate-btn" onclick="generateURL()">Generate Link! 💌</button>
+
+                <!-- Music Player for Config Page -->
+                <div class="config-music-player">
+                    <div class="music-player-header">
+                        <span style="margin-right: 10px;">🎵</span>
+                        <span>Background Music</span>
+                    </div>
+                    <div class="music-player-controls">
+                        <button class="music-player-btn" id="configPlayBtn" onclick="toggleConfigMusic()">
+                            ▶️ Play
+                        </button>
+                        <div class="music-player-info" id="configMusicInfo">
+                            Click play to preview the background music
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audio Element for Config Page -->
+                <audio id="configBgMusic" loop>
+                    <source src="music/A Lonely Cherry Tree 🌸.mp3" type="audio/mpeg">
+                </audio>
+
+                <div class="url-output" id="urlOutput">
+                    <div style="margin-bottom: 10px; color: var(--color2);">Share this link:</div>
+                    <div id="generatedURL"></div>
+                    <button class="copy-btn" onclick="copyURL()">Copy Link 📋</button>
+                </div>
+            </div>
+
+            <div class="preview-section">
+                <div class="preview-label">✨ Live Preview ✨</div>
+                <div class="preview-container" id="previewContainer">
+                    <div id="previewLetter" class="letter-paper">
+                        <div class="letter-message" id="previewMessage">My Dearest,
+
+Every moment with you feels like a beautiful dream I never want to wake from. 
+
+You make my world brighter, my heart fuller, and my life infinitely better.
+
+I love you more than words can express.
+
+Forever yours,</div>
+                        <div class="letter-signature" id="previewSignature">Your Secret Admirer</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer with Logo -->
+        <div class="footer-logo">
+            <img src="images/tapus-logo.jpeg" alt="TAPUS">
+            <div class="footer-copyright">
+                © 2026 Sincerely, | Spread the love 💌
+                <p>Background Music: <a href="https://www.youtube.com/watch?v=D5L36JDKxR0&list=PLdsGes2mFh92eHpOZVJQgoubb6rF0CcvU&" target="_blank" rel="noopener noreferrer">A Lonely Cherry Tree 🌸 by Pix</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Letter Display Screen -->
+    <div class="letter-screen" id="letterScreen">
+        <div id="letterContainer" class="letter-paper">
+            <div class="letter-message" id="displayMessage"></div>
+            <div class="letter-signature" id="displaySignature"></div>
+        </div>
+    </div>
+
+    <!-- Music Control -->
+    <div class="music-control hidden" id="musicControl" onclick="toggleMusic()">
+        🎵
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="bgMusic" loop>
+        <source src="music/A Lonely Cherry Tree 🌸.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Global error handler
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Error caught: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo);
+            window.location.href = 'error.html';
+            return true;
+        };
+
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+            window.location.href = 'error.html';
+        });
+
+        // Background hearts
+        function createBackgroundHearts() {
+            const hearts = ['💌', '💕', '💗', '💓', '💝', '❤️'];
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'bg-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (15 + Math.random() * 20) + 'px';
+                heart.style.animationDuration = (6 + Math.random() * 4) + 's';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 10000);
+            }, 800);
+        }
+
+        createBackgroundHearts();
+
+        // Update preview
+        function updatePreview() {
+            const message = document.getElementById('letterMessage').value;
+            const sender = document.getElementById('senderName').value;
+            const style = document.getElementById('containerStyle').value;
+            const color1 = document.getElementById('color1').value;
+            const color2 = document.getElementById('color2').value;
+            const color3 = document.getElementById('color3').value;
+
+            document.documentElement.style.setProperty('--color1', color1);
+            document.documentElement.style.setProperty('--color2', color2);
+            document.documentElement.style.setProperty('--color3', color3);
+
+            const previewLetter = document.getElementById('previewLetter');
+            previewLetter.className = 'letter-' + style;
+
+            document.getElementById('previewMessage').textContent = message;
+            document.getElementById('previewSignature').textContent = sender;
+        }
+
+        // Data compression
+        function compressData(obj) {
+            const jsonStr = JSON.stringify(obj);
+            const compressed = btoa(unescape(encodeURIComponent(jsonStr)))
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=/g, '');
+            return compressed;
+        }
+
+        function decompressData(compressed) {
+            try {
+                const base64 = compressed
+                    .replace(/-/g, '+')
+                    .replace(/_/g, '/');
+                const padding = '='.repeat((4 - base64.length % 4) % 4);
+                const jsonStr = decodeURIComponent(escape(atob(base64 + padding)));
+                return JSON.parse(jsonStr);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // Generate URL
+        function generateURL() {
+            const message = document.getElementById('letterMessage').value;
+            const sender = document.getElementById('senderName').value;
+            const style = document.getElementById('containerStyle').value;
+            const color1 = document.getElementById('color1').value;
+            const color2 = document.getElementById('color2').value;
+            const color3 = document.getElementById('color3').value;
+
+            const data = {
+                m: message,
+                s: sender,
+                st: style,
+                c1: color1,
+                c2: color2,
+                c3: color3
+            };
+
+            const compressed = compressData(data);
+            const url = window.location.origin + window.location.pathname + '?d=' + compressed;
+            
+            document.getElementById('generatedURL').textContent = url;
+            document.getElementById('urlOutput').style.display = 'block';
+        }
+
+        // Copy URL
+        function copyURL() {
+            const url = document.getElementById('generatedURL').textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Link copied! 💌');
+            });
+        }
+
+        // Config page music player
+        let configMusicPlaying = false;
+        const configBgMusic = document.getElementById('configBgMusic');
+        const configPlayBtn = document.getElementById('configPlayBtn');
+        const configMusicInfo = document.getElementById('configMusicInfo');
+
+        function toggleConfigMusic() {
+            if (configMusicPlaying) {
+                configBgMusic.pause();
+                configPlayBtn.textContent = '▶️ Play';
+                configMusicInfo.textContent = 'Music paused';
+                configMusicPlaying = false;
+            } else {
+                configBgMusic.play().then(() => {
+                    configPlayBtn.textContent = '⏸️ Pause';
+                    configMusicInfo.textContent = 'Now playing romantic background music...';
+                    configMusicPlaying = true;
+                }).catch(e => {
+                    console.log('Music play failed:', e);
+                    configMusicInfo.textContent = 'Unable to play music. Please check if music file exists.';
+                });
+            }
+        }
+
+        // Music control
+        let musicPlaying = true;
+        const bgMusic = document.getElementById('bgMusic');
+        const musicControl = document.getElementById('musicControl');
+
+        function toggleMusic() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicControl.textContent = '🔇';
+                musicPlaying = false;
+            } else {
+                bgMusic.play().catch(e => console.log('Music play failed:', e));
+                musicControl.textContent = '🎵';
+                musicPlaying = true;
+            }
+        }
+
+        // Check for URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        if (urlParams.has('d')) {
+            const data = decompressData(urlParams.get('d'));
+            
+            if (data) {
+                // Hide config, show letter
+                document.getElementById('configScreen').classList.add('hidden');
+                document.getElementById('letterScreen').classList.add('active');
+                document.getElementById('musicControl').classList.remove('hidden');
+
+                // Apply color settings
+                document.documentElement.style.setProperty('--color1', data.c1);
+                document.documentElement.style.setProperty('--color2', data.c2);
+                document.documentElement.style.setProperty('--color3', data.c3);
+                
+                const letterContainer = document.getElementById('letterContainer');
+                letterContainer.className = 'letter-' + data.st;
+                
+                document.getElementById('displayMessage').textContent = data.m;
+                document.getElementById('displaySignature').textContent = data.s;
+
+                // Try to auto-play music (may be blocked by browser)
+                setTimeout(() => {
+                    bgMusic.play().then(() => {
+                        musicPlaying = true;
+                        musicControl.textContent = '🎵';
+                    }).catch(e => {
+                        console.log('Autoplay blocked:', e);
+                        musicControl.textContent = '🔇';
+                    });
+                }, 500);
+            }
+        }
+    </script>
+</body>
+</html>
